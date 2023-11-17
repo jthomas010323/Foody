@@ -4,42 +4,30 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorAlert from "../components/ErrorAlert";
 
 function PostsListPage() {
-  const [posts, setPosts] = useState([]);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
+  const [image, setImage] = useState(null);
 
-  useEffect(() => {
-    async function getData() {
-      setLoading(true);
-      try {
-        let response = await fetch("/api/micro_posts");
-        let allPosts = await response.json();
-        setPosts(allPosts);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching all micro_posts", error);
-        setError(true);
-      }
+  const onImageChange = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      setImage(URL.createObjectURL(event.target.files[0]));
     }
-
-    getData();
-
-    return () => {
-      // clean up function
-    };
-  }, []);
+  }
 
   if (error) return <ErrorAlert details="Failed to fetch all micro posts" />;
-  if (loading) return <LoadingSpinner />;
+
 
   return (
-    <div className="container-fluid text-center">
-      <div className="row justify-content-center">
-        {posts.map((entryData) => (
-          <MicroPostCard {...entryData} key={entryData.id} />
-        ))}
-      </div>
+    <div onClick={() => setIsClicked(true)} className="box justify-content-center">
+      <p>Foody</p>
+      {(isClicked && <div>
+        <input type="file" onChange={onImageChange} className="filetype" />
+        <img alt="preview image" src={image} />
+      </div>) || <p>Foody is an AI that checks to see if your image is a food item. Click here to upload an image</p>}
     </div>
+
   );
 }
 
