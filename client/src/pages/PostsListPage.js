@@ -22,10 +22,16 @@ function PostsListPage() {
   return (
     <div onClick={() => setIsClicked(true)} className="box justify-content-center">
       <p>Foody</p>
-      {(isClicked && <div>
+      {(!image && <div>
+        <p>Foody is an AI that checks to see if your image is a food item. Click here to upload an image</p>
         <input type="file" onChange={onImageChange} className="filetype" />
+        
+      </div>)|| <div>
         <img alt="preview image" src={image} />
-      </div>) || <p>Foody is an AI that checks to see if your image is a food item. Click here to upload an image</p>}
+        <button type="button" class="btn btn-primary">Primary</button> 
+        </div>
+        
+}
     </div>
 
   );
