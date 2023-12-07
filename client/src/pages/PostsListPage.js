@@ -1,40 +1,49 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createRef } from "react";
+import axios from 'axios';
 import MicroPostCard from "../components/MicroPostCard";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorAlert from "../components/ErrorAlert";
 
 function PostsListPage() {
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
   const [image, setImage] = useState(null);
+  const fileInput = createRef();
 
-  const onImageChange = (event) => {
-    if (event.target.files && event.target.files[0]) {
-      setImage(URL.createObjectURL(event.target.files[0]));
-    }
-  }
 
-  if (error) return <ErrorAlert details="Failed to fetch all micro posts" />;
+  const submitImage = async (e) => {
+    e.preventDefault();
 
+    const formData = new FormData();
+    formData.append("image", image);
+
+    const result = await axios.post(
+      "http://localhost:8080/upload-image",
+      formData,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      }
+    );
+  };
+
+  const onInputChange = (e) => {
+    console.log(e.target.files[0]);
+    setImage(e.target.files[0]);
+  };
 
   return (
-    <div onClick={() => setIsClicked(true)} className="box justify-content-center">
-      <p>Foody</p>
-      {(!image && <div>
-        <p>Foody is an AI that checks to see if your image is a food item. Click here to upload an image</p>
-        <input type="file" onChange={onImageChange} className="filetype" />
-        
-      </div>)|| <div>
-        <img alt="preview image" src={image} />
-        <button type="button" class="btn btn-primary">Primary</button> 
+    <div className="box justify-content-center">
+      <form onSubmit={submitImage}>
+        <div>
+          <p>Foody is an AI that checks to see if your image is a food item. Click here to upload an image</p>
+          <input type="file" name="image" accept="image/*" onChange={onInputChange} />
+          <button type="submit" className="btn btn-primary">Submit</button>
         </div>
-        
-}
+
+
+      </form>
     </div>
 
   );
-}
 
+}
 export default PostsListPage;

@@ -1,50 +1,58 @@
 const express = require("express");
-const morgan = require("morgan");
 const multer = require("multer");
-const path = require("path");
-const db = require("./models");
+const mongoose = require("mongoose");
 const app = express();
+var cors = require('cors');
+app.use(cors());
 const PORT = process.env.PORT;
+const mongoURL = "mongodb+srv://jthomas010323:foody@cluster0.0tjnkum.mongodb.net/"
+
+mongoose.connect(mongoURL, {
+  useNewUrlParser: true
+}).then(() => { console.log("Connected to database"); })
+  .catch(e => console.log(e))
+
+require("./imageDetails");
+const Images = mongoose.model("ImageDetails");
 
 const storage = multer.diskStorage({
-  destination: './upload/images',
-  filename: (req, file, cb)=>{
-    return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/')
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now();
+    cb(null, uniqueSuffix + file.originalname)
   }
 })
-const upload = multer({
-storage: storage
-})
-app.use('/image', express.static('upload/images'));
-app.post("/upload", upload.single('image'), (req, res)=>{
-  console.log(req.file);
-  res.json({
-    sucess:1,
-    profile_url: `http://localhost:${PORT}/image/${req.file.filename}`
-  })
+
+const upload = multer({ storage: storage })
+
+app.get("/", async (req, res) => {
+  res.send("Sucess");
 })
 
-//app.use(express.json());
+app.post("/upload-image", upload.single("image"), async (req, res) => {
+  console.log(req.body);
+  const imageName = req.file.filename;
 
-//const logFormat = process.env.NODE_ENV === "production" ? "combined" : "dev";
-//app.use(morgan(logFormat));
+  try {
+    await Images.create({ image: imageName })
+    res.json({ status: "ok" });
+  } catch (error) {
+    res.json({ status: error })
+  }
+});
 
-//app.use("/api", require("./controllers"));
+app.get("/get-image", async (req, res) => {
+  try {
+    Images.find({}).then((data) => {
+      res.send({ status: "ok", data: data });
+    });
+  } catch (error) {
+    res.json({ status: error });
+  }
+});
 
-//if (process.env.NODE_ENV === "production") {
-  //app.use(express.static(path.join(__dirname, "../client/build")));
-
-  // all unknown routes should be handed to our react app
- // app.get("*", function (req, res) {
-   // res.sendFile(path.join(__dirname, "../client/build", "index.html"));
-  //});
-//}
-
-// update DB tables based on model updates. Does not handle renaming tables/columns
-// NOTE: toggling this to true drops all tables (including data)
-//db.sequelize.sync({ force: false });
-
-// start up the server
 if (PORT) {
   app.listen(PORT, () => console.log(`Listening on ${PORT}`));
 } else {
