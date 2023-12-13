@@ -1,9 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Link, NavLink } from "react-router-dom";
 import PostsListPage from "./pages/PostsListPage";
-
-import AboutUsPage from "./pages/AboutUsPage";
-
 import "./App.css";
 
 function Navigation(props) {
@@ -13,13 +10,7 @@ function Navigation(props) {
         <Link className="navbar-brand" to="/">
           Foody
         </Link>
-        <ul className="navbar-nav me-auto">
-          <li className="nav-item">
-            <NavLink className="nav-link" to="/about-us">
-              About Us
-            </NavLink>
-          </li>
-        </ul>
+
       </div>
     </nav>
   );
@@ -32,7 +23,6 @@ function App() {
       <div className="container-xl text-center">
         <div className="row justify-content-center">
           <Routes>
-            <Route path="/about-us" element={<AboutUsPage />} />
             <Route path="/" element={<PostsListPage />} />
           </Routes>
         </div>

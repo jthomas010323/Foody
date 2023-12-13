@@ -1,1 +1,19 @@
 /* Add custom CSS here */
+#image {
+  display: none;
+}
+
+img {
+  width: 500px;
+}
+
+.imageContainer {
+  display: block;
+  width: 500px;
+  margin: auto;
+}
+
+.btn {
+  margin-top: 20px;
+  width: 100px;
+}
