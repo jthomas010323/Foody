@@ -1,6 +1,13 @@
 /* Add custom CSS here */
+* {
+  font-family: "Silkscreen", sans-serif;
+}
 #image {
   display: none;
+}
+
+label:hover {
+  cursor: pointer;
 }
 
 img {

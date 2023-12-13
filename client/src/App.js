@@ -3,12 +3,13 @@ import { BrowserRouter, Routes, Route, Link, NavLink } from "react-router-dom";
 import PostsListPage from "./pages/PostsListPage";
 import "./App.css";
 
+
 function Navigation(props) {
   return (
-    <nav className="navbar navbar-expand-sm navbar-dark bg-dark shadow mb-3">
+    <nav className="navbar navbar-expand-sm   bg-warning shadow text-dark mb-5 fs-3 pt-3">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
-          Foody
+          <h1>Foody</h1>
         </Link>
 
       </div>

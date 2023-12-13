@@ -1,6 +1,6 @@
 import React, { useState, useEffect, createRef } from "react";
 import axios from 'axios';
-
+import LoadingSpinner from "../components/LoadingSpinner"
 
 function PostsListPage() {
 
@@ -8,7 +8,6 @@ function PostsListPage() {
   const [imageURL, setImageURL] = useState(null);
   const fileInput = createRef();
   const [isSubmit, setIsSubmit] = useState(false)
-
 
   const submitImage = async (e) => {
     e.preventDefault();
@@ -32,22 +31,26 @@ function PostsListPage() {
   };
 
   return (
-    <div className="box justify-content-center">
-      {isSubmit && <h1>Image has been submited</h1> ||<form onSubmit={submitImage}>
+    <div className="box justify-content-center fs-4">
+      {isSubmit &&
         <div>
-          <p>Foody is an AI that checks to see if your image is a food item.</p>
-          <input type="file" id='image' name="image" accept="image/*" onChange={onInputChange} />
-
-          {(image &&
-            (<div className="imageContainer">
-              <img alt="preview image" src={imageURL} /> <button type="submit" className="btn btn-primary">Submit</button>
-            </div>))
-            || <label for="image">Click here to upload image.</label>}
-            
+          <h2>Image has been submited</h2>
+          <h3>Loading Response</h3>
+          <LoadingSpinner />
         </div>
-        
+        || <form onSubmit={submitImage}>
+          <div>
+            <p>Foody is an AI that checks to see if your image is a food item.</p>
+            <input type="file" id='image' name="image" accept="image/*" onChange={onInputChange} />
 
-      </form>}
+            {(image &&
+              (<div className="imageContainer">
+                <img alt="preview image" src={imageURL} /> <button type="submit" className="btn btn-warning">Submit</button>
+              </div>))
+              || <label for="image">Click here to upload image.</label>}
+
+          </div>
+        </form>}
     </div>
 
   );
